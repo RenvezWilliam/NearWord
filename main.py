@@ -11,7 +11,11 @@ def get_file(file_name):
 
 def search_near_words(word_list, word_to_search):
     word_to_search = word_to_search.lower()
-    word_bank_0, word_bank_1, word_bank_2, word_bank_3 = [], [], [], []
+    dictionary = dict()
+
+    words = []
+
+    biggest = 0
 
     for word in word_list:
 
@@ -19,28 +23,28 @@ def search_near_words(word_list, word_to_search):
         len_diff = abs(len(word) - len(word_to_search))
         total = count + len_diff
 
-        match total:
-            case 0:
-                word_bank_0.append(word)
-            case 1:
-                word_bank_1.append(word)
-            case 2:
-                word_bank_2.append(word)
-            case 3:
-                word_bank_3.append(word)
-            case _:
-                continue
+        if biggest < total:
+            biggest = total
 
-    return word_bank_0, word_bank_1, word_bank_2, word_bank_3
+        dictionary[word] = total
+
+    for i in range(biggest + 1):
+        words.append([])
+
+    for word in dictionary:
+        words[dictionary[word]].append(word)
+
+    return words
 
 
 if __name__ == '__main__':
 
-    mot = "boa"
+    mot = "antidote"
     liste = get_file("gutenberg.txt")
-    liste0, liste1, liste2, liste3 = search_near_words(liste, mot)
+    NearWords = search_near_words(liste, mot)
 
-    print("Existe ? : ", liste0 != [])
-    print("Différence de 1 :", liste1)
-    print("Différence de 2 :", liste2)
-    print("Différence de 3 :", liste3)
+    print("Existe ? :", len(NearWords[0]) > 0)
+    print("Différence de 1 :", NearWords[1])
+    print("Difference de 2 :", NearWords[2])
+    print("Différence de 3 :", NearWords[3])
+    print("Différence de", len(NearWords) - 1, ":", NearWords[len(NearWords) - 1])
